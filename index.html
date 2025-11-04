@@ -8,17 +8,30 @@
 </head>
 <body>
     <script src="main.js"></script>
-    
-    <div class="title-bar">
-        <h1 id="Main_Title">Faces of the Revolution</h1>
-        <img id="dropdown_image">
-        <select id="dropdown_menu"></select>
-        <p id = "description-box"></p>
-    </div>
-    <div id="histogram-container" style="position: relative;">
-        <svg id="histogram"></svg>
-        <!-- <button id="reset-button" class="reset-button">
-            Reset Zoom
-        </button> -->
+    <div id="snap-container">
+        <section id="home">
+            <h1 class="Main_Title">Faces of the Revolution</h1>
+            <p id="subtitle">Who was drawn the most often, and when?</p>
+            <div id="face_container"></div>
+        </section>
+
+        <section id="main_viz">
+            <div class="title-bar">
+                <h1 id="viz_title">Faces of the Revolution</h1>
+                <img id="dropdown_image">
+                <select id="dropdown_menu"></select>
+                <p id = "description-box"></p>
+            </div>
+            <div id="histogram-container" style="position: relative;">
+                <svg id="histogram"></svg>
+            </div>
+        </section>
+
+
+
+        <section id="barplot_aside">
+            <h1>BARPLOT HERE</h1>
+        </section>
+
     </div>
 </body>

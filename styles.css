@@ -1,6 +1,8 @@
 body {
     background-color: rgb(208, 199, 199);
     color:  #ff0000;
+    scroll-snap-type: y mandatory;
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .portrait_thumbnail{
@@ -20,6 +22,29 @@ body {
     color: #000000;
 }
 
+/* Add a scrollable container for sections */
+#snap-container {
+    height: 100vh;
+    overflow-y: scroll;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    scroll-snap-type: y mandatory;
+    width: 100vw; /* Ensure container does not exceed viewport width */
+}
+
+/* Each section snaps to start */
+section {
+    padding-top: 10px;
+    height: 100vh;
+    scroll-snap-align: start;
+    width: 100vw; /* Prevent section from exceeding viewport width */
+    box-sizing: border-box;
+}
+
+section #home {
+    scroll-snap-align: start;
+    margin-top: 20px;
+}
+
 
 #histogram{
     position: relative;
@@ -36,12 +61,6 @@ body {
     z-index: 10;
 }
 
-#Main_Title {
-    font-size: 50px;
-    padding-top: 10px;
-    padding-left: 20px;
-    color: #0A3161;
-}
 
 #dropdown_menu {
     font-family: Snell Roundhand, cursive;
@@ -95,4 +114,76 @@ body {
     margin-left: 20px;
     margin-top: 30px;
     max-width: 600px;
+}
+
+#home {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+
+
+.Main_Title {
+    font-size: 70px;
+    padding-top: 10px;
+    padding-left: 20px;
+    color: #0A3161;
+}
+
+
+#home .Main_Title {
+    text-align: center;
+    margin: 0 auto;
+    z-index: 2;
+    position: relative;
+}
+
+#subtitle {
+    font-size: 30px;
+    text-align: center;
+    margin: 0 auto;
+    z-index: 2;
+    position: relative;
+    color: #0A3161;
+
+}
+
+#viz_title {
+    font-size: 50px;
+    padding-top: 10px;
+    padding-left: 20px;
+    color: #0A3161;
+}
+
+
+
+#face_container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* allow clicks to pass through */
+    z-index: 1;
+}
+
+#face_container img {
+    position: absolute;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.chart-label {
+    font-family: 'Arial Black', Gadget, sans-serif;
+    /* color: #0A3161; */ /* Not effective for SVG <text> */
+    fill: #0A3161;        /* Use fill for SVG <text> */
+    font-size: 15px;
+    overflow-wrap: break-word;
+    margin-left: 20px;
+    margin-top: 30px;
+    max-width: 600px;
+    font-weight: normal;
 }
