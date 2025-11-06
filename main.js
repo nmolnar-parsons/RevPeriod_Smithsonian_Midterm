@@ -514,7 +514,7 @@ function displayData(){
 
     // add title to #viz_title h1
     d3.select("#viz_title")
-        .text("Our collect has 1,670 identified sitters:");
+        .text("Our collection has 1,670 identified sitters:");
 
     // add subtitle
     d3.select("#barplot_subtitle")
