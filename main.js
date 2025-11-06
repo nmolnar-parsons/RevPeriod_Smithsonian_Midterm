@@ -505,11 +505,16 @@ function displayData(){
     // how many portraits are in our dataset?
     numportraits = portraits.length;
     console.log(`Total portraits in dataset: ${numportraits}`);
+    // how many unique sitters are there in the dataset?
+    const unique_sitters = new Set(portraits.map(d => d.Sitter));
+    console.log(`Unique sitters: ${unique_sitters.size}`);
+    console.log(unique_sitters) //1670
+
     
 
     // add title to #viz_title h1
     d3.select("#viz_title")
-        .text("In our collection there are "+ numportraits + " portraits with identified sitters:");
+        .text("Our collect has 1,670 identified sitters:");
 
     // add subtitle
     d3.select("#barplot_subtitle")
