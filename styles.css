@@ -5,6 +5,18 @@ body {
     overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
+
+p {
+    font-family: 'Arial Black', Gadget, sans-serif;
+    color: #0A3161;
+    font-size: 15px;
+    overflow-wrap: break-word;
+    margin-left: 20px;
+    margin-top: 30px;
+    max-width: 600px;
+}
+
+
 .portrait_thumbnail{
     width: 50px;
     height: 50px;
@@ -16,10 +28,11 @@ body {
     gap: 20px; /* space between title and button */
 }
 
-.x-axis text {
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: 14px;
-    color: #000000;
+.x-axis text,
+.y-axis text {
+    font-family: 'Arial Black', Gadget, sans-serif;
+    color: #0A3161;
+    font-size: 15px;
 }
 
 /* Add a scrollable container for sections */
@@ -38,6 +51,7 @@ section {
     scroll-snap-align: start;
     width: 100vw; /* Prevent section from exceeding viewport width */
     box-sizing: border-box;
+    position: relative; /* Added for absolute positioning of arrow button */
 }
 
 section #home {
@@ -64,7 +78,7 @@ section #home {
 
 #dropdown_menu {
     font-family: Snell Roundhand, cursive;
-    font-size: 50px;
+    font-size: 40px;
     text-decoration: underline;
     color: #ffffff;
     margin-top: 10px; 
@@ -73,8 +87,12 @@ section #home {
     padding-right: 10px;
     box-sizing: border-box;
     border-radius: 16px;
-    /* background-color: #b31942; */
-    background-color: rgb(161, 158, 158);
+    background-color: #0a316193;
+}
+/* Ensure background color stays when clicked/focused */
+#dropdown_menu:focus,
+#dropdown_menu:active {
+    background-color: #0a316193;
 }
 .timeline-label {
     font-family: Snell Roundhand, cursive;
@@ -116,6 +134,8 @@ section #home {
     max-width: 600px;
 }
 
+
+
 #home {
     position: relative;
     display: flex;
@@ -143,7 +163,7 @@ section #home {
 }
 
 #subtitle {
-    font-size: 30px;
+    font-size: 20px;
     text-align: center;
     margin: 0 auto;
     z-index: 2;
@@ -155,8 +175,19 @@ section #home {
 #viz_title {
     font-size: 50px;
     padding-top: 10px;
-    padding-left: 20px;
+    padding-left: 150px; /* align with barplot/histogram left margin */
     color: #0A3161;
+    text-align: left;
+}
+
+#barplot_subtitle {
+    padding-left: 130px; /* align with barplot/histogram left margin */
+    font-size: 20px;
+}
+
+#barplot_context {
+    padding-left: 130px; /* align with barplot/histogram left margin */
+    white-space: nowrap;
 }
 
 
@@ -186,4 +217,43 @@ section #home {
     margin-top: 30px;
     max-width: 600px;
     font-weight: normal;
+}
+
+.barplot-label-text {
+    font-family: 'Arial Black', Gadget, sans-serif;
+    font-size: 15px;
+    fill: #0A3161;
+    color: #0A3161;
+}
+
+
+
+/* Styles for the floating arrow button */
+.arrow-btn {
+    position: absolute;
+    left: 50%;
+    bottom: 12px; /* move lower on the page */
+    transform: translateX(-50%);
+    background: #0a316193;
+    color: #fff;
+    border: none;
+    border-radius: 12px; /* rectangle with rounded corners */
+    width: 100px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    transition: background 0.2s;
+}
+
+.arrow-btn:hover {
+    background: #b31942;
+}
+
+.arrow {
+    pointer-events: none;
 }

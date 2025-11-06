@@ -11,8 +11,21 @@
     <div id="snap-container">
         <section id="home">
             <h1 class="Main_Title">Faces of the Revolution</h1>
-            <p id="subtitle">Who was drawn the most often, and when?</p>
+
             <div id="face_container"></div>
+            <button class="arrow-btn" id="arrow-home" aria-label="Next section">
+                <span class="arrow">&#8595;</span>
+            </button>
+        </section>
+
+        <section id="barplot_aside">
+            <h1 id="viz_title"></h1>
+            <p id="barplot_subtitle"></p>
+            <div id="barplot-viz"></div>
+            <p id="barplot_context"></p>
+            <button class="arrow-btn" id="arrow-barplot" aria-label="Next section">
+                <span class="arrow">&#8595;</span>
+            </button>
         </section>
 
         <section id="main_viz">
@@ -25,13 +38,23 @@
             <div id="histogram-container" style="position: relative;">
                 <svg id="histogram"></svg>
             </div>
+            <button class="arrow-btn" id="arrow-mainviz" aria-label="Previous Section">
+                <span class="arrow">&#8593;</span>
+            </button>
         </section>
 
-
-
-        <section id="barplot_aside">
-            <h1>BARPLOT HERE</h1>
-        </section>
-
+        
     </div>
+
+    <script>
+    document.getElementById('arrow-home').onclick = function() {
+        document.getElementById('barplot_aside').scrollIntoView({behavior: 'smooth'});
+    };
+    document.getElementById('arrow-mainviz').onclick = function() {
+        document.getElementById('barplot_aside').scrollIntoView({behavior: 'smooth'});
+    };
+    document.getElementById('arrow-barplot').onclick = function() {
+        document.getElementById('main_viz').scrollIntoView({behavior: 'smooth'});
+    };
+    </script>
 </body>

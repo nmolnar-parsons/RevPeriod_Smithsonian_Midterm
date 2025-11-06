@@ -31,10 +31,11 @@ d3.csv("Data/revperiod_portraits_with_faces.csv").then(data => {
                 .style("width", "100px")
                 .style("height", "100px")
                 .style("object-fit", "cover")
-                .style("border-radius", "5px")
+                .style("border-radius", "10px") // <-- match barplot faces rounding
                 .style("position", "absolute")
                 .style("left", `${x}px`)
                 .style("top", `${y}px`)
+                .style("box-shadow", "0 2px 8px rgba(0,0,0,0.15)") // match barplot faces shadow
                 .style("transform", `rotate(${(Math.random() - 0.5) * 30}deg)`);
         }
     });
@@ -185,7 +186,7 @@ d3.csv("Data/revperiod_portraits_with_faces.csv").then(data => {
         d3.select("#histogram").selectAll("*").remove();
 
         //dimensions
-        const margin = ({top: 150, right: 50, bottom: 100, left: 50});
+        const margin = ({top: 150, right: 200, bottom: 100, left: 150});
         const width = window.innerWidth*0.99;
         const height = window.innerHeight*0.85;
 
@@ -258,33 +259,34 @@ d3.csv("Data/revperiod_portraits_with_faces.csv").then(data => {
                 // d.stackIndex = 0 is the bottom image, higher stackIndex is higher up
                 const y = axisY - imageHeight - d.stackIndex * imageSpacing;
                 return `translate(${x_scale(+d.Clean_Date) - imageWidth/2}, ${y})`;
-            })
-
-
-        // Add image
-        images.append("image")
-            .attr("href", d => d.face_urls.split("; ")[0]) // use first face url
-            .attr("width", imageWidth)
-            .attr("height", imageHeight)
-            .attr("preserveAspectRatio", "xMidYMid slice")
-            .style("cursor", "pointer") // <-- pointer cursor on face images
-            .on("click", (event, d) => {
-                window.open(d.collectionsURL, "_blank");
             });
 
-        // Draw x-axis above the images
-        const x_axis = d3.axisBottom(x_scale)
-            .ticks(9)
-            .tickFormat(d3.format("d"));
+    // Add image
+    images.append("image")
+        .attr("href", d => d.face_urls.split("; ")[0]) // use first face url
+        .attr("width", imageWidth)
+        .attr("height", imageHeight)
+        .attr("preserveAspectRatio", "xMidYMid slice")
+        .style("cursor", "pointer") // <-- pointer cursor on face images
+        .style("border-radius", "10px") // <-- round edges to match barplot faces
+        .style("box-shadow", "0 2px 8px rgba(0,0,0,0.15)") // <-- match barplot faces shadow
+        .on("click", (event, d) => {
+            window.open(d.collectionsURL, "_blank");
+        });
 
-        g.append("g")
-            .attr("class", "x-axis")
-            .attr("transform", `translate(0, ${axisY})`)
-            .call(x_axis)
-            .selectAll('text')	
-            .style('text-anchor', 'middle')
-            .style('font-size', '20px')
-            .attr('dy', '1.5em');
+    // Draw x-axis above the images
+    const x_axis = d3.axisBottom(x_scale)
+        .ticks(9)
+        .tickFormat(d3.format("d"));
+
+    g.append("g")
+        .attr("class", "x-axis")
+        .attr("transform", `translate(0, ${axisY})`)
+        .call(x_axis)
+        .selectAll('text')	
+        .style('text-anchor', 'middle')
+        .style('font-size', '20px')
+        .attr('dy', '1.5em');
 
 
 
@@ -395,10 +397,10 @@ d3.csv('Data/check_dates.csv').then( data => {
 
 
     function click_text(event, d){ //takes an event and data (we have piped in the array so data is hanlded)
-      const sitterName = d[0]; // take first element from d, i.e. sitter
-      displayThumbnails(sitterName, portraits);
-      highlight_rectange.call(this, event, d); // highlight the clicked rectangle
-      console.log(sitterName)
+        const sitterName = d[0]; // take first element from d, i.e. sitter
+        displayThumbnails(sitterName, portraits);
+        highlight_rectange.call(this, event, d); // highlight the clicked rectangle
+        console.log(sitterName)
     }
     // add click to bar
     d3.selectAll('rect').on("click", click_text);
@@ -407,85 +409,183 @@ d3.csv('Data/check_dates.csv').then( data => {
 })
 
 function displayData(){
-  // define dimensions and margins for the graphic
-  const margin = ({top: 20, right: 50, bottom: 20, left: 80}); // this is unused?
-  const width = window.innerWidth - 100;
-  const height = 300;
+    // define dimensions and margins for the graphic
+    const margin = ({top: 20, right: 200, bottom: 30, left: 200}); // increased bottom for axis text
+    const width = window.innerWidth*0.99; // match histogram width
+    const height = 300;
+    
+    // Change container to select #barplot_aside and append SVG
+    const container = d3.select('#barplot-viz')
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height);
+
+    const sitters = Array.from(grouped.keys());
+    const maxCount = d3.max(grouped, ([,arr]) => arr.length);
+
+    //Scales
+    const xScale = d3.scaleBand()
+        .domain(sitters)
+        .range([margin.left, width - margin.right])
+        .padding(0.1);
+
+    const yScale = d3.scaleLinear()
+        .domain([0, maxCount])
+        .range([height - margin.bottom, margin.top]);
+    
+    // Color scale from #0A3161 (blue) to #B31942 (red)
+    const sequentialScale = d3.scaleLinear()
+        .domain([0, maxCount])
+        .range(["#0A3161", "#B31942"]);
+
+    // attach a graphic element, and append rectangles to it
+    container.append('g')
+        .selectAll('rect')
+        .data(Array.from(grouped.entries()))
+        .join('rect')
+        .attr('x', ([sitter, arr]) => xScale(sitter))
+        .attr('y', ([, arr]) => yScale(arr.length))
+        .attr('height', ([, arr]) => yScale(0) - yScale(arr.length))
+        .attr('width', xScale.bandwidth() - 2)
+        .style('fill', ([, arr]) => sequentialScale(arr.length));
+
+    // Axes
+    // Y Axis
+    const yAxis =  d3.axisLeft(yScale).ticks(5);
+
+    container.append('g')
+        .attr('transform', `translate(${margin.left},0)`)
+        .call(yAxis)
+        .call(g => g.selectAll('text').style('fill', 'black').style('font-family', 'Arial Black, Gadget, sans-serif'))
+        .call(g => g.selectAll('path').style('stroke', 'black'))
+        .call(g => g.selectAll('line').style('stroke', 'black'));
+
+    // X Axis
+    const xAxis =  d3.axisBottom(xScale)
+        .tickSize(0)
+        .tickFormat(sitter => {
+            // Convert sitter name to initials with periods, e.g. "George Washington" => "G.W."
+            return sitter.split(' ')
+                .map(word => word[0].toUpperCase() + '.')
+                .join('');
+        });
+
+    container.append('g')
+        .attr('transform', `translate(0, ${height - margin.bottom})`)
+        .call(xAxis)
+        .call(g => g.selectAll('text')
+            .style('text-anchor', 'middle')
+            .style('font-family', 'Snell Roundhand, cursive')
+            .style('font-weight',"bold")
+            .style('fill', '#0A3161')
+            .style('font-size', '15px')
+            .attr('dy', '1em')
+        )
+        .call(g => g.selectAll('path').style('stroke', 'black'))
+        .call(g => g.selectAll('line').style('stroke', 'black'));
+
+    // Labelling the graph
+    container.append('text')
+        .attr("class","barplot-label-text")
+        .attr('y', margin.top-20)
+        .attr('x', margin.left)
+        .attr('text-anchor', 'start');
+
+    //y-axis label (centered vertically)
+    container.append("text")
+        .attr("class","barplot-label-text")
+        .attr("transform", `rotate(-90)`)
+        .attr("y", margin.left - 60) // move label next to axis
+        .attr("x", 0 - (height / 2)) // center label vertically
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Number of Portraits");
   
-  // Change container to select #barplot_aside and append SVG
-  const container = d3.select('#barplot_aside')
-    .append('svg')
-    .attr('width', width)
-    .attr('height', height);
 
-  const sitters = Array.from(grouped.keys());
-  const maxCount = d3.max(grouped, ([,arr]) => arr.length);
+    // how many portraits are in our dataset?
+    numportraits = portraits.length;
+    console.log(`Total portraits in dataset: ${numportraits}`);
+    
 
-  //Scales
-  const xScale = d3.scaleBand()
-    .domain(sitters) // look at all sitters
-    .range([margin.left, width - margin.right]) //display across the page
-    .padding(0.1); // add padding
+    // add title to #viz_title h1
+    d3.select("#viz_title")
+        .text("In our collection there are "+ numportraits + " portraits with identified sitters:");
 
-  const yScale = d3.scaleLinear()
-    .domain([0, maxCount]) // from 0 to max count of portraits
-    .range([height - margin.bottom, margin.top]); // from bottom to top of page
-  
-  const sequentialScale = d3.scaleSequential()
-    .domain([0, d3.max(Array.from(grouped.values()), arr => arr.length)])
-    .interpolator(d3.interpolateRgb("red", "blue"));
+    // add subtitle
+    d3.select("#barplot_subtitle")
+        .text("but a few sitters are overrepresented:");
 
-  // attach a graphic element, and append rectangles to it
-  container.append('g')
-    .selectAll('rect')
-    .data(Array.from(grouped.entries()))
-    .join('rect')
-    .attr('x', ([sitter, arr]) => xScale(sitter))
-    .attr('y', ([, arr]) => yScale(arr.length))
-    .attr('height', ([, arr]) => yScale(0) - yScale(arr.length))
-    .attr('width', xScale.bandwidth() - 2)
-    .style('fill', ([, arr]) => sequentialScale(arr.length)); // use scale to generate color
- 
-  // Axes
-  // Y Axis
-  const yAxis =  d3.axisLeft(yScale).ticks(5)
+    //add context
+    d3.select("#barplot_context")
+        .text("For political, historical, and generally high profile roles in the foundation of the United States, these men had their likeness recorded more than average:");
 
-  container.append('g')
-    .attr('transform', `translate(${margin.left},0)`)
-    .call(yAxis);
+    // --- Append images and names below #barplot_subtitle ---
+    d3.csv("Data/revperiod_portraits_with_faces.csv").then(faceData => {
+        // Filter for sitters
+        const sittersToShow = ["George Washington", "Benjamin Franklin", "Thomas Jefferson", "John Adams"];
+        const faces = sittersToShow.map(sitter => {
+            // Find first entry for each sitter with a face_urls
+            const entry = faceData.find(d => d.Sitter === sitter && d.face_urls && d.face_urls.trim() !== "");
+            return entry ? {
+                name: sitter,
+                img: entry.face_urls.split(";")[0].trim()
+            } : null;
+        }).filter(Boolean);
 
-  // X Axis
-  const xAxis =  d3.axisBottom(xScale).tickSize(0);
+        // Remove previous row if it exists
+        d3.select("#barplot_faces_row").remove();
 
-  // add x axis and rotate text (from lab example)
-  container.append('g')
-    .attr('transform', `translate(0, ${height - margin.bottom})`)
-    .call(xAxis)
-    .selectAll('text')	
-    .style('text-anchor', 'end')
-    .attr('dx', '-.6em')
-    .attr('dy', '-0.1em')
-    .attr('transform', d => {return 'rotate(-45)' });
+        // Create a flex row container
+        const row = d3.select("#barplot_context")
+            .node()
+            .insertAdjacentHTML('afterend', `<div id="barplot_faces_row" style="display: flex; justify-content: center; gap: 60px; margin-top: 30px;"></div>`);
 
-  // Labelling the graph
-  container.append('text')
-    .attr('font-family', 'sans-serif')
-    .attr('font-weight', 'bold')
-    .attr('font-size', 20)
-    .attr('y', margin.top-20)
-    .attr('x', margin.left)
-    .attr('fill', 'black')
-    .attr('text-anchor', 'start')
+        // Use D3 to append images and names
+        const facesRow = d3.select("#barplot_faces_row");
+        facesRow.selectAll(".barplot-face")
+            .data(faces)
+            .enter()
+            .append("div")
+            .attr("class", "barplot-face")
+            .style("display", "flex")
+            .style("flex-direction", "column")
+            .style("align-items", "center")
+            .style("cursor", "pointer")
+            .on("click", function(event, d) {
+                // Scroll to face histogram and load that person's data
+                document.getElementById('main_viz').scrollIntoView({behavior: 'smooth'});
+                // Set dropdown and trigger change event
+                const select = document.getElementById("dropdown_menu");
+                select.value = d.name;
+                select.dispatchEvent(new Event('change'));
+            })
+            .each(function(d) {
+                d3.select(this)
+                    .append("img")
+                    .attr("src", d.img)
+                    .attr("alt", d.name + " portrait")
+                    .style("width", "200px")
+                    .style("height", "200px")
+                    .style("object-fit", "cover")
+                    .style("border-radius", "10px")
+                    .style("box-shadow", "0 2px 8px rgba(0,0,0,0.15)")
+                    .style("cursor", "pointer");
+                // Add box behind text
+                d3.select(this)
+                    .append("span")
+                    .text(d.name)
+                    .style("margin-top", "10px")
+                    .style('font-family', 'Snell Roundhand, cursive')
+                    .style("text-decoration","underline")
+                    .style("font-size", "40px")
+                    .style("color", "#ffffffff")
+                    .style("background", "#0a316193")
+                    .style("padding", "8px 24px")
+                    .style("border-radius", "12px")
+                    .style("box-shadow", "0 2px 8px rgba(0,0,0,0.18)")
+                    .style("cursor", "pointer");
+            });
+    });
 
-  //y-axis label
-  container.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("font-family", "sans-serif")
-    .attr("font-size", 15)
-    .attr("y", 30)
-    .attr("x",0 - (height / 2))
-    .attr("dy", "1em")
-    .style("text-anchor", "middle")
-    .text("Number of Portraits");
-  
 };
+

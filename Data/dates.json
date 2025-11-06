@@ -20,25 +20,20 @@
       "summary": "George Washington was the 1st President of the United States of America. He died in 1799 at the age of 67, and his face lived on in his portraits."
     }
   ],
-  "John Adams": [
+  "Benjamin Franklin": [
     {
       "event": "Birth",
-      "date": "1735-10-30",
-      "description": ""
-    },
-    {
-      "event": "Assumed Presidency",
-      "date": "1797-03-04",
+      "date": "1706-01-17",
       "description": ""
     },
     {
       "event": "Death",
-      "date": "1826-07-04",
+      "date": "1790-04-17",
       "description": "",
-      "age_at_death": 90
+      "age_at_death": 84
     },
     {
-      "summary": "John Adams was the 2nd President of the United States of America. He did not die within the Revolutionary Period."
+      "summary": "Benjamin Franklin was an important figure of the Revolutionary Period. He died in 1790 at the age of 84, and his face lived on in his portraits."
     }
   ],
   "Thomas Jefferson": [
@@ -62,57 +57,26 @@
       "summary": "Thomas Jefferson was the 3rd President of the United States of America. He did not die within the Revolutionary Period."
     }
   ],
-  "James Madison": [
+  
+  "John Adams": [
     {
       "event": "Birth",
-      "date": "1751-03-16",
+      "date": "1735-10-30",
       "description": ""
     },
     {
       "event": "Assumed Presidency",
-      "date": "1809-03-04",
+      "date": "1797-03-04",
       "description": ""
     },
     {
       "event": "Death",
-      "date": "1836-06-28",
+      "date": "1826-07-04",
       "description": "",
-      "age_at_death": 85
+      "age_at_death": 90
     },
     {
-      "summary": "James Madison was the 4th President of the United States of America. He died in 1836 at the age of 85, and his face lived on in his portraits."
-    }
-  ],
-  "Alexander Hamilton": [
-    {
-      "event": "Birth",
-      "date": "1755-01-11",
-      "description": ""
-    },
-    {
-      "event": "Death",
-      "date": "1804-07-12",
-      "description": "",
-      "age_at_death": 49
-    },
-    {
-      "summary": "Alexander Hamilton was an important figure of the Revolutionary Period. He died in 1804 at the age of 49, and his face lived on in his portraits."
-    }
-  ],
-  "Benjamin Franklin": [
-    {
-      "event": "Birth",
-      "date": "1706-01-17",
-      "description": ""
-    },
-    {
-      "event": "Death",
-      "date": "1790-04-17",
-      "description": "",
-      "age_at_death": 84
-    },
-    {
-      "summary": "Benjamin Franklin was an important figure of the Revolutionary Period. He died in 1790 at the age of 84, and his face lived on in his portraits."
+      "summary": "John Adams was the 2nd President of the United States of America. He did not die within the Revolutionary Period."
     }
   ]
 }
